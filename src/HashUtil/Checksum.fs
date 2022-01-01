@@ -12,11 +12,13 @@ module Checksum =
         | SHA256
         | SHA384
         | SHA512
+        | BLAKE3
 
-    let allHashTypes : HashType[] =
+    let allHashTypes: HashType [] =
         typeof<HashType>
         |> FSharpType.GetUnionCases
-        |> Array.map(fun info -> FSharpValue.MakeUnion(info,[||]) :?> HashType)
+        |> Array.map
+            (fun info -> FSharpValue.MakeUnion(info, [||]) :?> HashType)
 
     let parseHashType (input: string) =
         let hashTypeStr = input.ToUpper().Trim()
@@ -27,15 +29,17 @@ module Checksum =
         | "SHA256" -> Some SHA256
         | "SHA384" -> Some SHA384
         | "SHA512" -> Some SHA512
+        | "BLAKE3" -> Some BLAKE3
         | _ -> None
 
-    let getHashAlgorithm hashType: HashAlgorithm =
+    let getHashAlgorithm hashType : HashAlgorithm =
         match hashType with
         | MD5 -> upcast MD5.Create()
         | SHA1 -> upcast SHA1.Create()
         | SHA256 -> upcast SHA256.Create()
         | SHA384 -> upcast SHA384.Create()
         | SHA512 -> upcast SHA512.Create()
+        | BLAKE3 -> upcast SHA512.Create() // TODO: change to correct impl
 
     let computeHashOfString (hashAlg: HashAlgorithm) (str: string) =
         str
