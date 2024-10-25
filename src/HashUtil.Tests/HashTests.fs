@@ -6,9 +6,13 @@ open Microsoft.FSharp.Reflection
 open Xunit
 open Xunit.Abstractions
 
+// https://emn178.github.io/online-tools/blake3/
+
 type ChecksumTests(output: ITestOutputHelper) =
     static member emptyHashes: obj [] seq =
-        Seq.ofList [ [| MD5
+        Seq.ofList [ [| BLAKE3
+                        "af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262" |]
+                     [| MD5
                         "d41d8cd98f00b204e9800998ecf8427e" |]
                      [| RIPEMD160
                         "9c1185a5c5e9fc54612808977ee8f548b2258d31" |]
@@ -28,7 +32,10 @@ type ChecksumTests(output: ITestOutputHelper) =
         Assert.Equal(expectedHash, emptyStrHash)
 
     static member simpleStringHashes: obj [] seq =
-        Seq.ofList [ [| MD5
+        Seq.ofList [ [| BLAKE3
+                        "hello"
+                        "ea8f163db38682925e4491c5e58d4bb3506ef8c14eb78a86e908c5624a67200f" |]
+                     [| MD5
                         "hello"
                         "5d41402abc4b2a76b9719d911017c592" |]
                      [| RIPEMD160
@@ -45,7 +52,8 @@ type ChecksumTests(output: ITestOutputHelper) =
                         "59e1748777448c69de6b800d7a33bbfb9ff1b463e44354c3553bcdb9c666fa90125a3c79f90397bdf5f6a13de828684f" |]
                      [| SHA512
                         "hello"
-                        "9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043" |] ]
+                        "9b71d224bd62f3785d96d46ad3ea3d73319bfbc2890caadae2dff72519673ca72323c3d99ba5c11d7c7acc6e14b8c5da0c4663475c2e5c3adef46f73bcdec043" |]
+                     ]
 
     [<Theory; MemberData("simpleStringHashes")>]
     member _.``hash simple string``(hashType, inputStr, expectedHash) =
@@ -54,7 +62,9 @@ type ChecksumTests(output: ITestOutputHelper) =
         Assert.Equal(expectedHash, strHash)
 
     static member hashTypeStrings: obj [] seq =
-        Seq.ofList [ [| [ "md5"; " md5   "; "MD5 " ]
+        Seq.ofList [ [| [ "blake3"; " blake3   "; "BLAKE3 " ]
+                        Some BLAKE3 |]
+                     [| [ "md5"; " md5   "; "MD5 " ]
                         Some MD5 |]
                      [| [ "ripemd160"; " ripemd160   "; " RIPEMD160 " ]
                         Some RIPEMD160 |]

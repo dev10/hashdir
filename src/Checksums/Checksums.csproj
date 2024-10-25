@@ -9,4 +9,8 @@
 	  <DebugType>None</DebugType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blake3" Version="1.1.0" />
+  </ItemGroup>
+
 </Project>

@@ -7,6 +7,7 @@ open System.Text
 
 module Checksum =
     type HashType =
+        | BLAKE3
         | MD5
         | RIPEMD160
         | SHA1
@@ -23,6 +24,7 @@ module Checksum =
         let hashTypeStr = input.ToUpper().Trim()
 
         match hashTypeStr with
+        | "BLAKE3" -> Some BLAKE3
         | "MD5" -> Some MD5
         | "RIPEMD160" -> Some RIPEMD160
         | "SHA1" -> Some SHA1
@@ -33,6 +35,7 @@ module Checksum =
 
     let getHashAlgorithm hashType: HashAlgorithm =
         match hashType with
+        | BLAKE3 -> upcast Checksums.BLAKE3.Create()
         | MD5 -> upcast MD5.Create()
         | RIPEMD160 -> upcast Checksums.RIPEMD160.Create()
         | SHA1 -> upcast SHA1.Create()

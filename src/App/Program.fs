@@ -9,7 +9,7 @@ open System.CommandLine.Invocation
 open System.Threading
 
 
-let defaultHashAlg = HashType.SHA1
+let defaultHashAlg = HashType.BLAKE3
 
 type RootOpt
     (
